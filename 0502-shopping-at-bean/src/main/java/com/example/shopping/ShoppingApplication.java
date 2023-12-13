@@ -3,21 +3,62 @@ package com.example.shopping;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import com.example.shopping.entity.Order;
 import com.example.shopping.enumeration.PaymentMethod;
 import com.example.shopping.input.CartInput;
 import com.example.shopping.input.CartItemInput;
 import com.example.shopping.input.OrderInput;
+import com.example.shopping.repository.JdbcOrderItemRepository;
+import com.example.shopping.repository.JdbcOrderRepository;
+import com.example.shopping.repository.JdbcProductRepository;
+import com.example.shopping.repository.OrderItemRepository;
+import com.example.shopping.repository.OrderRepository;
+import com.example.shopping.repository.ProductRepository;
 import com.example.shopping.service.OrderService;
+import com.example.shopping.service.OrderServiceImpl;
 
 @Configuration
 @ComponentScan
 public class ShoppingApplication {
+
+    @Bean
+    public DataSource dataSource() {
+        EmbeddedDatabase dataSource = new EmbeddedDatabaseBuilder().addScripts("schema.sql", "data.sql")
+                .setType(EmbeddedDatabaseType.H2).build();
+        return dataSource;
+    }
+
+    @Bean
+    public OrderService orderService(OrderItemRepository orderItemRepository, OrderRepository orderRepository,
+            ProductRepository productRepository) {
+        return new OrderServiceImpl(orderRepository, orderItemRepository, productRepository);
+    }
+
+    @Bean
+    public OrderItemRepository orderItemRepository(DataSource dataSource) {
+        return new JdbcOrderItemRepository(dataSource);
+    }
+
+    @Bean
+    public OrderRepository orderRepository(DataSource dataSource) {
+        return new JdbcOrderRepository(dataSource);
+    }
+
+    @Bean
+    public ProductRepository productRepository(DataSource dataSource) {
+        return new JdbcProductRepository(dataSource);
+    }
 
     public static void main(String[] args) {
         ApplicationContext context = new AnnotationConfigApplicationContext(ShoppingApplication.class);
@@ -54,4 +95,3 @@ public class ShoppingApplication {
         System.out.println("注文確定処理が完了しました。注文ID=" + order.getId());
     }
 }
-
