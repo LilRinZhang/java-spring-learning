@@ -38,6 +38,11 @@ public class ShoppingApplication {
         return dataSource;
     }
 
+    @Bean
+    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
+    }
+
     public static void main(String[] args) {
 
         ApplicationContext context = new AnnotationConfigApplicationContext(ShoppingApplication.class);
@@ -76,4 +81,3 @@ public class ShoppingApplication {
         System.out.println("注文確定処理が完了しました。注文ID=" + order.getId());
     }
 }
-
