@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.example.training.entity.Reservation;
 import com.example.training.entity.StudentType;
 import com.example.training.entity.Training;
+import org.springframework.transaction.annotation.Transactional;
 import com.example.training.exception.CapacityOverException;
 import com.example.training.input.ReservationInput;
 import com.example.training.repository.ReservationRepository;
