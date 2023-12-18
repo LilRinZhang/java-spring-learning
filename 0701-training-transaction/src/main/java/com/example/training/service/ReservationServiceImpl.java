@@ -15,6 +15,7 @@ import com.example.training.repository.StudentTypeRepository;
 import com.example.training.repository.TrainingRepository;
 
 @Service
+@Transactional
 public class ReservationServiceImpl implements  ReservationService {
 
 	private final StudentTypeRepository studentTypeRepository;
