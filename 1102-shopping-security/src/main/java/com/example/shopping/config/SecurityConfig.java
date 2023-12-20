@@ -25,7 +25,10 @@ public class SecurityConfig {
                 .formLogin()
                 .loginPage("/login")
                 .failureUrl("/login?failure")
-                .defaultSuccessUrl("/maintenance/product/display-list");
+                .defaultSuccessUrl("/maintenance/product/display-list")
+                        .and()
+            .exceptionHandling()
+            .accessDeniedPage("/display-access-denied");
         return http.build();
     }
 
